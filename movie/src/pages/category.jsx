@@ -9,13 +9,13 @@ const CategoryPage = () => {
         <>
             <S.Category>CATEGORY</S.Category>
             <S.CategoryBox>
-                <S.ImageLink to="/movie/now-playing" bgImage={nowPlayingImage}>
+                <S.ImageLink to="/movie/now_playing" bgImage={nowPlayingImage}>
                     <S.Overlay>현재 상영중인</S.Overlay>
                 </S.ImageLink>
                 <S.ImageLink to="/movie/popular" bgImage={popularImage}>
                     <S.Overlay>인기있는</S.Overlay>
                 </S.ImageLink>
-                <S.ImageLink to="/movie/top-rated" bgImage={topRatedImage}>
+                <S.ImageLink to="/movie/top_rated" bgImage={topRatedImage}>
                     <S.Overlay>높은 평가를 받은</S.Overlay>
                 </S.ImageLink>
                 <S.ImageLink to="/movie/upcoming" bgImage={upcomingImage}>
