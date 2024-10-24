@@ -10,6 +10,7 @@ import SignUpPage from "./pages/signUp.jsx";
 import LoginPage from './pages/login.jsx';
 import SearchPage from './pages/search.jsx';
 import CategoryPage from './pages/category.jsx';
+import MovieDetailPage from './pages/movieDetail.jsx';
 
 const router = createBrowserRouter([
     {
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
             {
                 path: '/category',
                 element: <CategoryPage />,
+            },
+            {
+                path: 'movie/details/:movieId',
+                element: <MovieDetailPage />,
             },
         ],
     },

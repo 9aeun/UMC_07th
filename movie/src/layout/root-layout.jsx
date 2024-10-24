@@ -6,15 +6,14 @@ import { MdOutlineMovie } from "react-icons/md";
 
 const RootLayout = () => {
   return (
-    <div style={{ display: 'flex', padding: 0, margin: 0, height: '100vh', overflowY: 'auto'}}> {/* 높이를 100vh로 설정 */}
-      {/* 고정된 SideBar */}
+    <div style={{ display: 'flex', padding: 0, margin: 0, height: '100vh', overflowY: 'auto' }}>
       <N.SideBar>
         <N.Title to="/"> YONGCHA </N.Title>
         <N.Text to="/search"><IoSearch />&nbsp;  찾기 </N.Text>
         <N.Text to="/category"><MdOutlineMovie /> &nbsp;영화 </N.Text>
       </N.SideBar>
 
-      <div style={{ flex: 1 }}> {/* flex: 1 추가 */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         <N.TopNavBar>
           <div>
             <Link to="/login">
@@ -25,7 +24,8 @@ const RootLayout = () => {
             </Link>
           </div>
         </N.TopNavBar>
-        <div style={{ paddingTop: '70px', paddingLeft: '100px'}}>
+        
+        <div style={{ flex: 1, margin: '70px 0 0 100px', padding: '0', overflowY: 'auto' }}>
           <Outlet />
         </div>
       </div>

@@ -9,8 +9,10 @@ export const TopNavBar = styled.div`
     height: 40px;
     padding: 20px 10px;
     margin: 0;
+    margin-bottom: 10px;
     display: flex;
     background-color : #333333;
+    z-index: 10;
     
     > div { 
         display: flex; 
@@ -50,7 +52,7 @@ export const SideBar = styled.div`
     left : 0;
     z-index: 20;
     align-item : flex-start; 
-    margin-right: auto;
+    margin-right: 10px;
     padding-left: 20px; 
     overflow-y: auto;
 `
@@ -59,6 +61,7 @@ export const Title = styled(NavLink)`
     font-size: 30px;
     color: #f53344;
     margin-bottom : 20px;
+    z-index: 20;
     &:hover {
         opacity: 0.8;
         color: #f53344;

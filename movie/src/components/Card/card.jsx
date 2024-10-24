@@ -1,12 +1,18 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';  // useNavigate import 추가
 import styled from 'styled-components';
 
 export const CardContainer = styled.div`
     margin-top: 10px;
-    overflow-y: auto;
+    overflow-y: auto none;
     text-align: flex-start;
-    width : 150px;
-    flex-wrap: wrap;   // 글씨 자동 줄바꿈
+    width: 150px;
+    flex-wrap: wrap;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+
+    &:hover {
+        transform: scale(1.05);
+    }
 `;
 
 export const MovieImage = styled.img`
@@ -15,6 +21,11 @@ export const MovieImage = styled.img`
     object-fit: cover;
     aspect-ratio: 3 / 4;
     border-radius: 10px;
+    transition: opacity 0.3s ease;
+
+    &:hover {
+        opacity: 0.7;
+    }
 `;
 
 export const MovieTitle = styled.h3`
@@ -30,6 +41,14 @@ export const ReleaseDate = styled.p`
 `;
 
 const Card = ({ movie }) => {
+    const navigate = useNavigate();  // useNavigate hook 사용
+
+    const handleClick = () => {
+        navigate(`/movie/details/${movie.id}`);  // 영화 ID로 동적 경로로 이동
+    };
+    console.log('movie: ', movie);
+    console.log('movie ID: ', movie.id);
+
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
         const date = new Date(dateString).toLocaleDateString('ko-KR', options).replace(/\./g, '년 ').replace(/ /g, ' ').trim();
@@ -37,7 +56,7 @@ const Card = ({ movie }) => {
     };
 
     return (
-        <CardContainer>
+        <CardContainer onClick={handleClick}>
             <MovieImage src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} />
             <MovieTitle>{movie.title}</MovieTitle>
             <ReleaseDate>{formatDate(movie.release_date)}</ReleaseDate>

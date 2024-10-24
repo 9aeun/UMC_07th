@@ -7,5 +7,5 @@ export const CardList = styled.div`
     padding: 10px;
     justify-content: flex-start;
     min-height: 100vh;
-    overflow-y: auto;
+    overflow-y: auto none;
 `;
