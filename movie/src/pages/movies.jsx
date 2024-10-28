@@ -6,13 +6,13 @@ import { axiosInstance } from "../api/axios-instance.js";
 
 const MoviesPage = () => {
     const { category = 'popular' } = useParams();
-    const [movies, setMovies] = useState([]);  // 초기 상태가 배열
+    const [movies, setMovies] = useState([]);
 
     useEffect(() => {
         const getMovies = async () => {
             try {
                 const response = await axiosInstance.get(`/movie/${category}?language=ko-KR&page=1`);
-                setMovies(response.data.results || []);  // undefined일 경우 빈 배열로 설정
+                setMovies(response.data.results || []);
             } catch (error) {
                 console.error("Error fetching movies:", error);
             }
