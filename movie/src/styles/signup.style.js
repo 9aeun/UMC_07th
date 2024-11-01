@@ -43,12 +43,12 @@ export const SubmitButton = styled.button`
     border-radius: 8px;
     text-align: center;
     border: none;
-    background-color: ${({ isDisabled }) => (isDisabled ? "#ccc" : "#f53344")}; 
+    background-color: ${({ disabled }) => (disabled ? "#ccc" : "#f53344")};
     color: white;
     font-weight: bold;
-    cursor: ${({ isDisabled }) => (isDisabled ? "not-allowed" : "pointer")}; 
+    cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
 
     &:hover {
-        background-color: ${({ isDisabled }) => (isDisabled ? "#ccc" : "#e02434")};
+        background-color: ${({ disabled }) => (disabled ? "#ccc" : "#e02434")};
     }
 `;
