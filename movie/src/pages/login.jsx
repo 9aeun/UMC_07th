@@ -30,7 +30,10 @@ const LoginPage = () => {
                 <S.InputBox type="password" placeholder="비밀번호를 입력해주세요!" {...register("password")} />
                 <p style={{ color: 'red' }}>{errors.password?.message}</p>
 
-                <S.SubmitButton type="submit" disabled={!isValid} isDisabled={!isValid}>
+                <S.SubmitButton 
+                    type="submit" 
+                    disabled={!isValid}  // isValid를 통해 활성화 상태 관리
+                >
                     로그인
                 </S.SubmitButton>
             </form>

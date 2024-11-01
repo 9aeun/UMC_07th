@@ -42,7 +42,6 @@ const SignUpPage = () => {
                 <S.SubmitButton 
                     type="submit" 
                     disabled={!isValid || password !== confirmPassword} 
-                    isDisabled={!isValid || password !== confirmPassword}
                 >
                     제출
                 </S.SubmitButton>
