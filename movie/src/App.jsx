@@ -1,8 +1,6 @@
 import './App.css';
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-
-import HomePage from "./pages/home.jsx";
 import NotFound from "./pages/not-found.jsx";
 import MoviesPage from "./pages/movies.jsx";
 import RootLayout from "./layout/root-layout.jsx";
@@ -20,10 +18,10 @@ const router = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <MoviesPage category="popular" />, // 기본 카테고리 설정
+                element: <MoviesPage category="popular" />,
             },
             {
-                path: 'movie/:category', // 카테고리 매개변수 설정
+                path: 'movie/:category',
                 element: <MoviesPage />,
             },
             {
