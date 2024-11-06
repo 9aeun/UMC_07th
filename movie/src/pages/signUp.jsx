@@ -39,12 +39,7 @@ const SignUpPage = () => {
                 <S.InputBox type="password" placeholder="비밀번호를 다시 입력해주세요!" {...register("confirmPassword")} />
                 <p style={{ color: 'red' }}>{errors.confirmPassword?.message}</p>
 
-                <S.SubmitButton 
-                    type="submit" 
-                    disabled={!isValid || password !== confirmPassword} 
-                >
-                    제출
-                </S.SubmitButton>
+
             </form>
         </S.LoginContainer>
     );
