@@ -3,8 +3,12 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as S from "../styles/signup.style";
+import api from '../api/axios-auth';
+import { useNavigate } from 'react-router-dom';
 
 const SignUpPage = () => {
+    const navigate = useNavigate();
+    
     const schema = yup.object().shape({
         email: yup.string().email('유효한 이메일 주소를 입력해주세요.').required('이메일을 반드시 입력해주세요.'),
         password: yup.string().min(8, '비밀번호는 8자 이상이어야 합니다.').max(16, '비밀번호는 16자 이하여야 합니다.').required('비밀번호를 입력해주세요.'),
@@ -21,9 +25,18 @@ const SignUpPage = () => {
     const password = watch("password");
     const confirmPassword = watch("confirmPassword");
 
-    const onSubmit = (data) => {
-        console.log('폼 데이터 제출');
-        console.log(data);
+    const onSubmit = async (data) => {
+        try {
+            const response = await api.post('/auth/register', {
+                email: data.email,
+                password: data.password,
+                passwordCheck: data.confirmPassword,
+            });
+            console.log('회원가입 성공:', response.data);
+            navigate('/login');
+        } catch (error) {
+            console.error('회원가입 실패:', error.response?.data || error.message);
+        }
     };
 
     return (
@@ -38,8 +51,12 @@ const SignUpPage = () => {
 
                 <S.InputBox type="password" placeholder="비밀번호를 다시 입력해주세요!" {...register("confirmPassword")} />
                 <p style={{ color: 'red' }}>{errors.confirmPassword?.message}</p>
-
-
+                <S.SubmitButton 
+                    type="submit" 
+                    disabled={!isValid || password !== confirmPassword} 
+                >
+                    제출
+                </S.SubmitButton>
             </form>
         </S.LoginContainer>
     );

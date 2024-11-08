@@ -46,8 +46,6 @@ const Card = ({ movie }) => {
     const handleClick = () => {
         navigate(`/movie/details/${movie.id}`);  // 영화 ID로 동적 경로로 이동
     };
-    console.log('movie: ', movie);
-    console.log('movie ID: ', movie.id);
 
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
