@@ -8,4 +8,5 @@ export const CardList = styled.div`
     justify-content: flex-start;
     min-height: 100vh;
     overflow-y: auto none;
+    position: absolute;
 `;

@@ -8,7 +8,7 @@ export const LoginContainer = styled.div`
     align-items: center;
     color: white;
     padding: 20px;
-    justify-content: center; /* 수직 가운데 정렬 */
+    justify-content: center; 
 `;
 
 export const Intro = styled.h3`
