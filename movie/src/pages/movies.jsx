@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { axiosInstance } from "../api/axios-instance";
 import SkeletonCard from "../components/Card/skeletonCard.jsx";
 import Card from "../components/Card/card.jsx";
+import { ClipLoader } from "react-spinners"; // 로딩 스피너
 import * as S from "../styles/components/movies.style";
 
 const MoviesPage = () => {
@@ -92,6 +93,13 @@ const MoviesPage = () => {
             <SkeletonCard key={`skeleton-${index}`} />
           ))}
       </S.CardList>
+
+      {/* 로딩 스피너 */}
+      {isFetchingNextPage && (
+        <div style={{ display: "flex", justifyContent: "center", margin: "20px 0" }}>
+          <ClipLoader color="#3498db" size={50} />
+        </div>
+      )}
 
       {/* 감시 요소 */}
       <div
