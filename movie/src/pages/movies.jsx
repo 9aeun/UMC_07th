@@ -101,7 +101,6 @@ const MoviesPage = () => {
         </div>
       )}
 
-      {/* 감시 요소 */}
       <div
         ref={observerRef} // Intersection Observer가 감시할 요소
         style={{ height: "1px", backgroundColor: "transparent" }}
