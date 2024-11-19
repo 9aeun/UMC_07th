@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-// import { axiosInstance } from "../api/axios-instance";
 import useCustomFetch from "../hooks/useCustomFetch";
+import * as S from '../styles/components/movies.style.js';
 
 const HomePage = () => {
     const {data: movies, isLoading, isError} = useCustomFetch(`/movie/popular?language=ko-KR&page=1`);
@@ -17,8 +17,6 @@ const HomePage = () => {
     }
 
     return (
-
-
         <S.CardList>
             {movies.map((movie) => (
                 <Card key={movie.id} movie={movie}/>

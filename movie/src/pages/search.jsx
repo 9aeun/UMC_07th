@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { debounce } from 'lodash';  // lodash에서 debounce 가져오기
+import { debounce } from 'lodash';  
 import * as S from "../styles/searchPage.style";
 import * as M from "../styles/components/movies.style";
 import Card from '../components/Card/card';

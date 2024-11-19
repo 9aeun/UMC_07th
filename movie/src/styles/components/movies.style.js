@@ -9,4 +9,5 @@ export const CardList = styled.div`
     min-height: 100vh;
     overflow-y: auto none;
     position: absolute;
+    background-color: black;
 `;

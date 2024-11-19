@@ -4,7 +4,7 @@ export const Container = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    color: white;
+    color: black;
     padding: 20px;
 `;
 
@@ -16,7 +16,7 @@ export const MovieHeader = styled.div`
     padding: 20px;
     border-radius: 10px;
     height: 400px;
-    background: linear-gradient(to right, black 30%, transparent), url(${(props) => props.$imageUrl});
+    background: linear-gradient(to right, black 5%, transparent), url(${(props) => props.$imageUrl});
     background-position: center;
     background-size: cover;
     position: relative;
@@ -37,6 +37,7 @@ export const MovieDetail = styled.p`
     width: 50%;
     font-size: 18px;
     margin: 5px 0;
+    color: white;
 `;
 
 export const CastSection = styled.div`
