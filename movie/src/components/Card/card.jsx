@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 export const CardContainer = styled.div`
     margin-top: 10px;
-    overflow-y: auto none;
+    overflow-y: auto;
     text-align: flex-start;
     width: 150px;
     flex-wrap: wrap;

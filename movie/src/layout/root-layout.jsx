@@ -66,7 +66,7 @@ const RootLayout = () => {
   };
 
   return (
-    <div style={{ display: 'flex', padding: 0, margin: 0, height: '100vh', overflowY: 'auto', backgroundColor: 'black'}}>
+    <div style={{ display: 'flex', padding: 0, margin: 0, overflowY: 'visible', backgroundColor: 'black'}}>
       <N.SideBar>
         <N.Title to="/"> YONGCHA </N.Title>
         <N.Text to="/search"><IoSearch />&nbsp; 찾기 </N.Text>
