@@ -4,18 +4,25 @@ import { TodoContext } from "./context/TodoContext";
 import * as S from "../style/TodoDetail.style";
 
 function Detail() {
-  const { id } = useParams(); // URL의 id 파라미터 가져오기
+  const { id } = useParams();
+  console.log("id: ", id);
   const { fetchTodoById, deleteTodo, updateTodo } = useContext(TodoContext);
   const [todo, setTodo] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchTodo = async () => {
-      const data = await fetchTodoById(id); // id에 해당하는 Todo 데이터 가져오기
-      setTodo(data);
+      const data = await fetchTodoById(id);
+      if (data) {
+        console.log("data: ", data);
+        setTodo(data);
+      } else {
+        alert("해당 Todo를 찾을 수 없습니다.");
+        navigate("/");
+      }
     };
     fetchTodo();
-  }, [id, fetchTodoById]);
+  }, [id, fetchTodoById, navigate]);
 
   if (!todo) return <p>로딩 중...</p>;
 
@@ -39,9 +46,15 @@ function Detail() {
           <strong>수정 시간:</strong> {new Date(todo.updatedAt).toLocaleString()}
         </p>
       </S.DetailBox>
-      <S.Button onClick={() => deleteTodo(id)}>삭제</S.Button>
+      <S.Button onClick={() => deleteTodo(id).then(() => navigate("/"))}>
+        삭제
+      </S.Button>
       <S.Button
-        onClick={() => updateTodo(id, { checked: !todo.checked })}
+        onClick={() =>
+          updateTodo(id, { checked: !todo.checked }).then(() =>
+            setTodo({ ...todo, checked: !todo.checked })
+          )
+        }
       >
         상태 변경
       </S.Button>
