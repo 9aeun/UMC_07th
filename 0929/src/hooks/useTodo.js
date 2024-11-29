@@ -31,6 +31,22 @@ export const useTodo = (searchTerm) => {
     }
   }, []);
 
+  const fetchTodoById = useCallback(async (id) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await axios.get(`http://localhost:3000/todo/${id}`);
+      return response.data; // 개별 Todo 데이터 반환
+    } catch (err) {
+      setError(err.response?.data?.message || err.message || "Something went wrong!");
+      console.error(`Failed to fetch todo with id ${id}:`, err);
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
     fetchTodos(debouncedSearchTerm); // 검색어 변경에 따라 데이터 로드
   }, [debouncedSearchTerm, fetchTodos]);
@@ -83,5 +99,5 @@ export const useTodo = (searchTerm) => {
     }
   };
 
-  return { todos, loading, error, addTodo, updateTodo, deleteTodo };
+  return { todos, loading, error, addTodo, updateTodo, deleteTodo, fetchTodoById };
 };

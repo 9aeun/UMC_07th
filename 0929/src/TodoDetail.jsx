@@ -1,12 +1,11 @@
-import { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { TodoContext } from "./context/TodoContext";
+import { useTodo } from "./hooks/useTodo";
 import * as S from "../style/TodoDetail.style";
 
-function Detail() {
+function TodoDetail() {
   const { id } = useParams();
-  console.log("id: ", id);
-  const { fetchTodoById, deleteTodo, updateTodo } = useContext(TodoContext);
+  const { fetchTodoById, deleteTodo, updateTodo } = useTodo();
   const [todo, setTodo] = useState(null);
   const navigate = useNavigate();
 
@@ -14,7 +13,6 @@ function Detail() {
     const fetchTodo = async () => {
       const data = await fetchTodoById(id);
       if (data) {
-        console.log("data: ", data);
         setTodo(data);
       } else {
         alert("해당 Todo를 찾을 수 없습니다.");
@@ -46,9 +44,7 @@ function Detail() {
           <strong>수정 시간:</strong> {new Date(todo.updatedAt).toLocaleString()}
         </p>
       </S.DetailBox>
-      <S.Button onClick={() => deleteTodo(id).then(() => navigate("/"))}>
-        삭제
-      </S.Button>
+      <S.Button onClick={() => deleteTodo(id).then(() => navigate("/"))}>삭제</S.Button>
       <S.Button
         onClick={() =>
           updateTodo(id, { checked: !todo.checked }).then(() =>
@@ -63,4 +59,4 @@ function Detail() {
   );
 }
 
-export default Detail;
+export default TodoDetail;
