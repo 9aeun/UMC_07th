@@ -1,68 +1,85 @@
 import { useState, useEffect, useCallback } from "react";
 import { useDebounce } from "./useDebounce";
-import { useFetch } from "./useFetch";
+import axios from "axios";
 
 export const useTodo = (searchTerm) => {
-  const { request, loading, error } = useFetch();
   const [todos, setTodos] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
-  // Todo 목록 가져오기
   const fetchTodos = useCallback(async (search = "") => {
+    setLoading(true);
+    setError(null);
+
     try {
       const query = search ? `?title=${encodeURIComponent(search)}` : "";
-      const [response] = await request(`http://localhost:3000/todo${query}`, {
-        method: "GET",
-      });
-      setTodos(response || []);
-    } catch (err) {
-      console.error("Todo 목록 불러오기 실패:", err);
-    }
-  }, [request]);
+      const response = await axios.get(`http://localhost:3000/todo${query}`);
+      
+      // 서버 응답이 이중 배열인 경우 처리
+      const todosData = Array.isArray(response.data) && Array.isArray(response.data[0])
+        ? response.data[0]
+        : response.data;
 
-  // 검색어 변경 시 fetchTodos 실행
+      setTodos(todosData || []); // 상태 업데이트
+    } catch (err) {
+      setError(err.response?.data?.message || err.message || "Something went wrong!");
+      console.error("Todo 목록 불러오기 실패:", err);
+    } finally {
+      setLoading(false); // 로딩 상태 해제
+    }
+  }, []);
+
   useEffect(() => {
-    fetchTodos(debouncedSearchTerm);
+    fetchTodos(debouncedSearchTerm); // 검색어 변경에 따라 데이터 로드
   }, [debouncedSearchTerm, fetchTodos]);
 
-  // Todo 추가
   const addTodo = async (title, content) => {
+    setLoading(true);
+    setError(null);
+
     try {
-      await request("http://localhost:3000/todo", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, content }),
+      await axios.post("http://localhost:3000/todo", {
+        title,
+        content,
       });
-      fetchTodos(); // 추가 후 목록 갱신
+      fetchTodos(); // 목록 새로고침
     } catch (err) {
+      setError(err.response?.data?.message || err.message || "Something went wrong!");
       console.error("Failed to add todo:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Todo 수정
   const updateTodo = async (id, updateFields) => {
+    setLoading(true);
+    setError(null);
+
     try {
-      await request(`http://localhost:3000/todo/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updateFields),
-      });
-      fetchTodos(); // 수정 후 목록 갱신
+      await axios.patch(`http://localhost:3000/todo/${id}`, updateFields);
+      fetchTodos(); // 목록 새로고침
     } catch (err) {
+      setError(err.response?.data?.message || err.message || "Something went wrong!");
       console.error(`Failed to update todo with id ${id}:`, err);
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Todo 삭제
   const deleteTodo = async (id) => {
+    setLoading(true);
+    setError(null);
+
     try {
-      await request(`http://localhost:3000/todo/${id}`, {
-        method: "DELETE",
-      });
-      fetchTodos(); // 삭제 후 목록 갱신
+      await axios.delete(`http://localhost:3000/todo/${id}`);
+      fetchTodos(); // 목록 새로고침
     } catch (err) {
+      setError(err.response?.data?.message || err.message || "Something went wrong!");
       console.error(`Failed to delete todo with id ${id}:`, err);
+    } finally {
+      setLoading(false);
     }
   };
 

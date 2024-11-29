@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, useCallback } from "react";
+import { createContext, useState, useCallback, useEffect } from "react";
 import { useFetch } from "../hooks/useFetch";
 
 export const TodoContext = createContext();
@@ -6,39 +6,34 @@ export const TodoContext = createContext();
 export default function TodoContextProvider({ children }) {
   const { request, loading, error } = useFetch();
   const [todos, setTodos] = useState([]);
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
 
-  // fetchTodos를 useCallback으로 안정화
-  const fetchTodos = useCallback(
-    async (search = "") => {
-      try {
-        const query = search ? `?title=${encodeURIComponent(search)}` : "";
-        const response = await request(`http://localhost:3000/todo${query}`, {
-          method: "GET",
-        });
-        setTodos(response || []);
-      } catch (err) {
-        console.error("Todo 목록 불러오기 실패:", err);
-      }
-    },
-    [request] // request 참조를 의존성으로 추가
-  );
+  // 의존성에서 request를 제외한 fetchTodos
+  const fetchTodos = useCallback(async (search = "") => {
+    try {
+      const query = search ? `?title=${encodeURIComponent(search)}` : "";
+      const [response] = await request(`http://localhost:3000/todo${query}`, {
+        method: "GET",
+      });
+      const todosData = Array.isArray(response) ? response[0] : []; // 이중 배열 처리
+      console.log("Fetched Todos:", todosData); // 디버깅용 로그
+      setTodos(todosData || []); // 상태 업데이트
+    } catch (err) {
+      console.error("Todo 목록 불러오기 실패:", err);
+    }
+  }, []); // request를 의존성에서 제거
 
+  // 초기 데이터 로드
   useEffect(() => {
-    fetchTodos(); // 초기 렌더링 시 호출
-  }, [fetchTodos]);
+    fetchTodos(); // 컴포넌트 마운트 시 초기 데이터 로드
+  }, []); // 의존성을 최소화
 
-  const addTodo = async () => {
-    if (!title.trim() || !content.trim()) return;
+  const addTodo = async (title, content) => {
     try {
       await request("http://localhost:3000/todo", {
         method: "POST",
         body: JSON.stringify({ title, content }),
       });
-      await fetchTodos();
-      setTitle("");
-      setContent("");
+      fetchTodos(); // 목록 새로고침
     } catch (err) {
       console.error("Failed to add todo:", err);
     }
@@ -50,7 +45,7 @@ export default function TodoContextProvider({ children }) {
         method: "PATCH",
         body: JSON.stringify(updateFields),
       });
-      await fetchTodos();
+      fetchTodos(); // 목록 새로고침
     } catch (err) {
       console.error(`Failed to update todo with id ${id}:`, err);
     }
@@ -59,7 +54,7 @@ export default function TodoContextProvider({ children }) {
   const deleteTodo = async (id) => {
     try {
       await request(`http://localhost:3000/todo/${id}`, { method: "DELETE" });
-      await fetchTodos();
+      fetchTodos(); // 목록 새로고침
     } catch (err) {
       console.error(`Failed to delete todo with id ${id}:`, err);
     }
@@ -69,14 +64,10 @@ export default function TodoContextProvider({ children }) {
     <TodoContext.Provider
       value={{
         todos,
-        title,
-        setTitle,
-        content,
-        setContent,
+        fetchTodos,
         addTodo,
         updateTodo,
         deleteTodo,
-        fetchTodos,
         loading,
         error,
       }}
