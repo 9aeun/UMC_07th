@@ -9,6 +9,7 @@ import LoginPage from './pages/login.jsx';
 import SearchPage from './pages/search.jsx';
 import CategoryPage from './pages/category.jsx';
 import MovieDetailPage from './pages/movieDetail.jsx';
+import MainPage from './pages/mainPage.jsx';
 
 const router = createBrowserRouter([
     {
@@ -18,7 +19,7 @@ const router = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <MoviesPage category="popular" />,
+                element: <MainPage />,
             },
             {
                 path: 'movie/:category',
@@ -43,6 +44,10 @@ const router = createBrowserRouter([
             {
                 path: 'movie/details/:movieId',
                 element: <MovieDetailPage />,
+            },
+            {
+                path: '/search',
+                element: <SearchPage />,
             },
         ],
     },

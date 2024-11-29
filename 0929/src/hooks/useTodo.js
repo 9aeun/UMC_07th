@@ -1,103 +1,71 @@
-import { useState, useEffect, useCallback } from "react";
-import { useDebounce } from "./useDebounce";
+import { useQuery, useMutation, useQueryClient } from "react-query";
 import axios from "axios";
 
+const fetchTodos = async (search = "") => {
+  const query = search ? `?title=${encodeURIComponent(search)}` : "";
+  const response = await axios.get(`http://localhost:3000/todo${query}`);
+  return Array.isArray(response.data) && Array.isArray(response.data[0])
+    ? response.data[0]
+    : response.data;
+};
+
+const fetchTodoById = async (id) => {
+  const response = await axios.get(`http://localhost:3000/todo/${id}`);
+  return response.data;
+};
+
+const addTodo = async ({ title, content }) => {
+  await axios.post("http://localhost:3000/todo", { title, content });
+};
+
+const updateTodo = async ({ id, updateFields }) => {
+  await axios.patch(`http://localhost:3000/todo/${id}`, updateFields);
+};
+
+const deleteTodo = async (id) => {
+  await axios.delete(`http://localhost:3000/todo/${id}`);
+};
+
 export const useTodo = (searchTerm) => {
-  const [todos, setTodos] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const queryClient = useQueryClient();
 
-  const debouncedSearchTerm = useDebounce(searchTerm, 500);
-
-  const fetchTodos = useCallback(async (search = "") => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const query = search ? `?title=${encodeURIComponent(search)}` : "";
-      const response = await axios.get(`http://localhost:3000/todo${query}`);
-      
-      // 서버 응답이 이중 배열인 경우 처리
-      const todosData = Array.isArray(response.data) && Array.isArray(response.data[0])
-        ? response.data[0]
-        : response.data;
-
-      setTodos(todosData || []); // 상태 업데이트
-    } catch (err) {
-      setError(err.response?.data?.message || err.message || "Something went wrong!");
-      console.error("Todo 목록 불러오기 실패:", err);
-    } finally {
-      setLoading(false); // 로딩 상태 해제
+  // Todos 가져오기
+  const { data: todos = [], isLoading, error } = useQuery(
+    ["todos", searchTerm],
+    () => fetchTodos(searchTerm),
+    {
+      keepPreviousData: true,
     }
-  }, []);
+  );
 
-  const fetchTodoById = useCallback(async (id) => {
-    setLoading(true);
-    setError(null);
+  // Todo 추가
+  const addTodoMutation = useMutation(addTodo, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["todos"]);
+    },
+  });
 
-    try {
-      const response = await axios.get(`http://localhost:3000/todo/${id}`);
-      return response.data; // 개별 Todo 데이터 반환
-    } catch (err) {
-      setError(err.response?.data?.message || err.message || "Something went wrong!");
-      console.error(`Failed to fetch todo with id ${id}:`, err);
-      return null;
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  // Todo 업데이트
+  const updateTodoMutation = useMutation(updateTodo, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["todos"]);
+    },
+  });
 
-  useEffect(() => {
-    fetchTodos(debouncedSearchTerm); // 검색어 변경에 따라 데이터 로드
-  }, [debouncedSearchTerm, fetchTodos]);
+  // Todo 삭제
+  const deleteTodoMutation = useMutation(deleteTodo, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["todos"]);
+    },
+  });
 
-  const addTodo = async (title, content) => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      await axios.post("http://localhost:3000/todo", {
-        title,
-        content,
-      });
-      fetchTodos(); // 목록 새로고침
-    } catch (err) {
-      setError(err.response?.data?.message || err.message || "Something went wrong!");
-      console.error("Failed to add todo:", err);
-    } finally {
-      setLoading(false);
-    }
+  return {
+    todos,
+    isLoading,
+    error,
+    fetchTodoById,
+    addTodo: addTodoMutation.mutate,
+    updateTodo: updateTodoMutation.mutate,
+    deleteTodo: deleteTodoMutation.mutate,
   };
-
-  const updateTodo = async (id, updateFields) => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      await axios.patch(`http://localhost:3000/todo/${id}`, updateFields);
-      fetchTodos(); // 목록 새로고침
-    } catch (err) {
-      setError(err.response?.data?.message || err.message || "Something went wrong!");
-      console.error(`Failed to update todo with id ${id}:`, err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const deleteTodo = async (id) => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      await axios.delete(`http://localhost:3000/todo/${id}`);
-      fetchTodos(); // 목록 새로고침
-    } catch (err) {
-      setError(err.response?.data?.message || err.message || "Something went wrong!");
-      console.error(`Failed to delete todo with id ${id}:`, err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return { todos, loading, error, addTodo, updateTodo, deleteTodo, fetchTodoById };
 };
